@@ -24,5 +24,5 @@ jobs:
     steps:
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Starting migrate again && /app/migrate
+        run: echo Starting migrate again $TC_SECRET_MANAGER_TIMEOUT_SECS && /app/migrate
 
