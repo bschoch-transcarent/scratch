@@ -24,5 +24,5 @@ jobs:
     steps:
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: /app/migrate
+        run: echo $TC_SECRET_ACCESSOR_CRED | base64 --decode > /app/accessor.json; GOOGLE_APPLICATION_CREDENTIALS=/app/accessor.json /app/migrate
 
