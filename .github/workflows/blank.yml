@@ -24,7 +24,8 @@ jobs:
     steps:
       # Runs a single command using the runners shell
       - name: checkout repo
-        uses: actions/checkout@v3
+#         uses: actions/checkout@v3
+        run: git clone https://bschoch-transcarent:${TC_GITHUB_TOKEN}@github.com/transcarent/go-api
       - name: download dependencies
         run: go mod download -x
       - name: build migrate
