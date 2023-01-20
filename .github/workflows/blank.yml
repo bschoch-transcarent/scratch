@@ -23,6 +23,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: download dependencies
+        run: go mod download -x
+      - name: build migrate
+        run: CGO_ENABLED=0 GOOS=linux go build -v -mod mod -ldflags "-s -w" -o bin/migrate ./cmd/migrate
+      - name: run migrate
         run: /app/migrate
-
