@@ -34,6 +34,7 @@ jobs:
           done
           echo $envs
           echo ENVS=$envs >> $GITHUB_ENV
+          echo $${{ toJson(env) }}
     outputs:
       overrides: ${{ env.ENVS }}
   deploy:
@@ -42,4 +43,4 @@ jobs:
     env:
       OVERRIDES: ${{ needs.pr_commented.outputs.overrides }}
     steps:
-      - run: echo $OVERRIDES
+      - run: echo $OVERRIDES "${{ toJson(needs) }}"
