@@ -9,13 +9,14 @@ concurrency:
 jobs:
   pr_commented:
     name: PR comment
-    if: contains(github.event.issue.pull_request.labels.*.name, 'ephemeral') && contains(github.event.comment.body, '/set_var')
+    if: contains(github.event.comment.body, '/set_var')
     runs-on: ubuntu-latest
     steps:
       - uses: 'actions/checkout@v3'
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
+          echo ${{ github.event.pull_request.labels }}
           envs=''
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
