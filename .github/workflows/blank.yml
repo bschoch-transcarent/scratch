@@ -19,8 +19,11 @@ jobs:
           BODY: ${{ github.event.comment.body }}
         run: |
           envs=''
+          echo $BODY
           echo "$BODY" | while read line ; do
+            echo hello $line
             if [[ $line == "/set_var"* ]]; then
+              echo hi
               ps=( $(echo "$line" | tr '\n' ' ') ) 
               key=${ps[2]}
               value=${ps[3]}
