@@ -11,14 +11,13 @@ concurrency:
 jobs:
   pr_commented:
     name: PR comment
-    if: contains(github.event.comment.body, '/set_var')
+    if: contains(github.event.issue.labels.*.name, 'ephemeral') && contains(github.event.comment.body, '/set_var')
     runs-on: ubuntu-latest
     steps:
       - uses: 'actions/checkout@v3'
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
-          echo ${{ contains(github.event.issue.labels.*.name, 'ephemeral') }}
           envs=''
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
@@ -36,3 +35,11 @@ jobs:
           echo ENVS=$envs >> $GITHUB_ENV
     outputs:
       overrides: ${{ env.ENVS }}
+  deploy:
+    needs: [pr_commented]
+    uses: './.github/workflows/eph.deploy.yml'
+    with:
+      env_name: webapp-${{ github.event.pull_request.number }}
+      sha: ${{ github.sha }}
+      overrides: ${{ needs.pr_commented.outputs.overrides }}
+    secrets: inherit
