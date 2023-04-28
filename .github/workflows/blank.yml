@@ -18,7 +18,7 @@ jobs:
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
-          envs=''
+          export envs=''
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
               ps=( $(echo "$line" | tr '\n' ' ') ) 
@@ -26,9 +26,9 @@ jobs:
               value=${ps[2]}
               if [ -n "$key" ] && [ -n "$value" ]; then
                 if [ -n "$envs" ]; then
-                  envs="$envs,"
+                  export envs="$envs,"
                 fi
-                envs="$envs$key=$value"
+                export envs="$envs$key=$value"
                 echo $envs
               fi
             fi
