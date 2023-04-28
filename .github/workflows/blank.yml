@@ -37,9 +37,6 @@ jobs:
       overrides: ${{ env.ENVS }}
   deploy:
     needs: [pr_commented]
-    uses: './.github/workflows/eph.deploy.yml'
-    with:
-      env_name: webapp-${{ github.event.pull_request.number }}
-      sha: ${{ github.sha }}
-      overrides: ${{ needs.pr_commented.outputs.overrides }}
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ needs.pr_commented.outputs.overrides }}
