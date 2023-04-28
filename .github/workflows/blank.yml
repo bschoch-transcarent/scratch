@@ -32,11 +32,14 @@ jobs:
               fi
             fi
           done
+          echo $envs
           echo ENVS=$envs >> $GITHUB_ENV
     outputs:
       overrides: ${{ env.ENVS }}
   deploy:
     needs: [pr_commented]
     runs-on: ubuntu-latest
+    env:
+      OVERRIDES: ${{ needs.pr_commented.outputs.overrides }}
     steps:
-      - run: echo ${{ needs.pr_commented.outputs.overrides }}
+      - run: echo $OVERRIDES
