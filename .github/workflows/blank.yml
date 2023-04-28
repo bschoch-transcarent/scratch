@@ -18,7 +18,7 @@ jobs:
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
-          envs=''
+          let envs=''
           echo $envs
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
@@ -27,15 +27,12 @@ jobs:
               value=${ps[2]}
               if [ -n "$key" ] && [ -n "$value" ]; then
                 if [ -n "$envs" ]; then
-                  envs="$envs,"
-                  echo "$envs"
+                  let envs="$envs,"
                 fi
-                envs="$envs$key=$value"
-                echo "$envs"
+                let envs="$envs$key=$value"
               fi
             fi
           done
-          echo "$envs"
           echo "ENVS=$envs" >> $GITHUB_ENV
     outputs:
       overrides: ${{ env.ENVS }}
