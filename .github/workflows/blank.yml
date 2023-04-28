@@ -25,9 +25,9 @@ jobs:
               value=${ps[2]}
               if [ -n "$key" ] && [ -n "$value" ]; then
                 if [ -n "$envs" ]; then
-                  let envs="$envs,"
+                  envs="$envs,"
                 fi
-                let envs="$envs$key=$value"
+                envs="$envs$key=$value"
               fi
             fi
           done <<< "$BODY"
