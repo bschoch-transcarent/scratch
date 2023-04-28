@@ -18,7 +18,7 @@ jobs:
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
-          echo ${{ toJson(github.event.issue) }}
+          echo ${{ contains(github.event.issue.labels.*.name, 'ephemeral') }}
           envs=''
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
