@@ -1,38 +1,45 @@
-# This is a basic workflow to help you get started with Actions
+name: Ephemeral Issue Comment
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  issue_comment:
+    types:
+      - created
+      - edited
+concurrency:
+  group: eph-webapp-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: [ "self-hosted", "dev", "migrate" ]
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  pr_commented:
+    name: PR comment
+    if: contains(github.event.issue.pull_request.labels.*.name, 'ephemeral') && contains(github.event.comment.body, '/set_var')
+    runs-on: ubuntu-latest
     steps:
-      # Runs a single command using the runners shell
-      - name: checkout repo
-#         uses: actions/checkout@v3
+      - uses: 'actions/checkout@v3'
+      - env:
+          BODY: ${{ github.event.comment.body }}
         run: |
-            yes "" | apt-get install git
-            rm -rf go-api
-            git clone https://bschoch-transcarent:${TC_GITHUB_ACCESS_TOKEN}@github.com/transcarent/go-api
-            cd go-api
-#       - name: download dependencies
-#         run: go mod download -x
-      - name: build migrate
-        run: cd go-api && CGO_ENABLED=0 GOOS=linux go build -v -mod mod -ldflags "-s -w" -o bin/migrate ./cmd/migrate
-      - name: run migrate
-        run: bin/migrate
+          envs=''
+          echo "$BODY" | while read line ; do
+            if [[ $line == "/set_var"* ]]; then
+              ps=( $(echo "$line" | tr '\n' ' ') ) 
+              key=${ps[2]}
+              value=${ps[3]}
+              if [[ -n "$key" ]] && [[ -n "value" ]]; then
+                if [ -n "$envs" ]; then
+                  envs="$envs,"
+                fi
+                envs="$envs$key=$value"
+              fi
+            fi
+          done
+          echo ENVS=$envs >> $GITHUB_ENV
+    outputs:
+      overrides: ${{ env.ENVS }}
+  deploy:
+    needs: [pr_commented]
+    with:
+      env_name: webapp-${{ github.event.pull_request.number }}
+      sha: ${{ github.sha }}
+      overrides: ${{ needs.pr_commented.outputs.overrides }}
+    run:
+      - echo ${{ env.overrides }}
