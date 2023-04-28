@@ -25,10 +25,12 @@ jobs:
               key=${ps[2]}
               value=${ps[3]}
               if [ -n "$key" ] && [ -n "$value" ]; then
+                echo hello
                 if [ -n "$envs" ]; then
                   envs="$envs,"
                 fi
                 envs="$envs$key=$value"
+                echo $envs
               fi
             fi
           done
