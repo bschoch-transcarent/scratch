@@ -43,4 +43,4 @@ jobs:
     env:
       OVERRIDES: ${{ needs.pr_commented.outputs.overrides }}
     steps:
-      - run: echo $OVERRIDES "${{ toJson(needs) }}"
+      - run: echo $OVERRIDES "${{ toJson(needs) }}" "${{ toJson(env) }}"
