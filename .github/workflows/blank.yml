@@ -29,6 +29,7 @@ jobs:
                   envs="$envs,"
                 fi
                 envs="$envs$key=$value"
+                echo $envs
               fi
             fi
           done
