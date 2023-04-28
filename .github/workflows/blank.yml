@@ -22,8 +22,8 @@ jobs:
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
               ps=( $(echo "$line" | tr '\n' ' ') ) 
-              key=${ps[2]}
-              value=${ps[3]}
+              key=${ps[1]}
+              value=${ps[2]}
               echo $key $value
               if [ -n "$key" ] && [ -n "$value" ]; then
                 echo hello
