@@ -18,7 +18,7 @@ jobs:
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
-          echo ${{ github.event.issue.pull_request }}
+          echo ${{ github.event.issue.pull_request.labels }}
           envs=''
           echo "$BODY" | while read line ; do
             if [[ $line == "/set_var"* ]]; then
