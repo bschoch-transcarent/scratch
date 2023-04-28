@@ -1,5 +1,3 @@
-name: Ephemeral Issue Comment
-
 on:
   issue_comment:
     types:
@@ -33,13 +31,3 @@ jobs:
             fi
           done
           echo ENVS=$envs >> $GITHUB_ENV
-    outputs:
-      overrides: ${{ env.ENVS }}
-  deploy:
-    needs: [pr_commented]
-    with:
-      env_name: webapp-${{ github.event.pull_request.number }}
-      sha: ${{ github.sha }}
-      overrides: ${{ needs.pr_commented.outputs.overrides }}
-    run:
-      - echo ${{ env.overrides }}
