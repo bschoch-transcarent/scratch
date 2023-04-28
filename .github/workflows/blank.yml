@@ -30,14 +30,15 @@ jobs:
               fi
             fi
           done
+          echo $envs
           echo ENVS=$envs >> $GITHUB_ENV
+          echo $${{ toJson(env) }}
     outputs:
       overrides: ${{ env.ENVS }}
   deploy:
     needs: [pr_commented]
-    uses: './.github/workflows/eph.deploy.yml'
-    with:
-      env_name: webapp-${{ github.event.pull_request.number }}
-      sha: ${{ github.sha }}
-      overrides: ${{ needs.pr_commented.outputs.overrides }}
-    secrets: inherit
+    runs-on: ubuntu-latest
+    env:
+      OVERRIDES: ${{ needs.pr_commented.outputs.overrides }}
+    steps:
+      - run: echo $OVERRIDES "${{ toJson(needs) }}"
