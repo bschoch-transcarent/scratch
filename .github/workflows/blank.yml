@@ -11,7 +11,7 @@ concurrency:
 jobs:
   pr_commented:
     name: PR comment
-    if: contains(github.event.issue.pull_request.labels.*.name, 'ephemeral') && contains(github.event.comment.body, '/set_var')
+    if: contains(github.event.comment.body, '/set_var')
     runs-on: ubuntu-latest
     steps:
       - uses: 'actions/checkout@v3'
