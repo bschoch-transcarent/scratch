@@ -33,10 +33,10 @@ jobs:
             fi
           done
           echo $envs
-          echo ENVS=$envs >> $GITHUB_ENV
+          echo ENVS=hello >> $GITHUB_ENV
           echo "${{ toJson(env) }}"
     outputs:
-      overrides: $ENVS
+      overrides: ${{ env.ENVS }}
   deploy:
     needs: [pr_commented]
     runs-on: ubuntu-latest
