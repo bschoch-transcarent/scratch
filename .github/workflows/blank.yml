@@ -24,6 +24,7 @@ jobs:
               ps=( $(echo "$line" | tr '\n' ' ') ) 
               key=${ps[2]}
               value=${ps[3]}
+              echo $key $value
               if [ -n "$key" ] && [ -n "$value" ]; then
                 echo hello
                 if [ -n "$envs" ]; then
