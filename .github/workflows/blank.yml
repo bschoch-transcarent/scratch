@@ -24,17 +24,15 @@ jobs:
               ps=( $(echo "$line" | tr '\n' ' ') ) 
               key=${ps[1]}
               value=${ps[2]}
-              echo $key $value
               if [ -n "$key" ] && [ -n "$value" ]; then
-                echo hello
                 if [ -n "$envs" ]; then
                   envs="$envs,"
                 fi
                 envs="$envs$key=$value"
-                echo $envs
               fi
             fi
           done
+          echo ENVS=$envs
           echo ENVS=$envs >> $GITHUB_ENV
     outputs:
       overrides: ${{ env.ENVS }}
