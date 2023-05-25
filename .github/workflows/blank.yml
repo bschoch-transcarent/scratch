@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: 'actions/checkout@v3'
+      - name: Checkout Pull Request
+        run: |
+          hub pr checkout ${{ github.event.issue.number }}
+          echo SHA=$(git log -n 1 | head -n 1 | sed -e 's/^commit //' | head) >> $GITHUB_ENV
       - env:
           BODY: ${{ github.event.comment.body }}
         run: |
@@ -34,10 +38,13 @@ jobs:
           echo "ENVS=$envs" >> $GITHUB_ENV
     outputs:
       overrides: ${{ env.ENVS }}
+      sha: ${{ env.SHA }}
   deploy:
     needs: [pr_commented]
     runs-on: ubuntu-latest
     env:
       OVERRIDES: ${{ needs.pr_commented.outputs.overrides }}
+      SHA: ${{ needs.pr_commented.outputs.sha }}
     steps:
       - run: echo $OVERRIDES "${{ toJson(needs) }}" "${{ toJson(env) }}"
+      - run: echo $SHA
