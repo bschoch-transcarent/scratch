@@ -1,5 +1,3 @@
-name: Ephemeral Issue Comment
-
 on:
   issue_comment:
     types:
