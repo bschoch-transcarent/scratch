@@ -17,7 +17,7 @@ jobs:
       - uses: 'actions/checkout@v3'
       - name: Checkout Pull Request
         run: |
-          echo rf "${{ github.ref }}" pr "${{ github.event.pull_request.head.ref }}"
+          echo rf "${{ github.ref }}" pr "${{ github.event.pull_request }}"
           git fetch origin pull/${{ github.event.issue.number }}/head:BRANCH_NAME
           git checkout BRANCH_NAME
           echo SHA=$(git log -n 1 | head -n 1 | sed -e 's/^commit //' | head) >> $GITHUB_ENV
